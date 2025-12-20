@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>礼物推荐与生日清单</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-gift"></i>
+                <h1>礼物推荐</h1>
+            </div>
+            <nav class="nav">
+                <a href="#discover" class="nav-link active">发现礼物</a>
+                <a href="#lists" class="nav-link">我的清单</a>
+                <a href="#card" class="nav-link">制作贺卡</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section id="discover" class="section active">
+            <div class="hero">
+                <h2>为您的亲友寻找完美礼物</h2>
+                <p>浏览我们精心挑选的礼物推荐，创建生日清单，分享给朋友和家人。</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-lg">开始探索</button>
+                    <button class="btn btn-outline btn-lg">查看热门</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="搜索礼物...">
+                <select id="categorySelect" class="select-input">
+                    <option value="all">全部分类</option>
+                    <option value="electronics">电子产品</option>
+                    <option value="fashion">时尚服饰</option>
+                    <option value="home">家居用品</option>
+                    <option value="books">书籍</option>
+                    <option value="beauty">美妆护肤</option>
+                    <option value="sports">运动户外</option>
+                </select>
+                <select id="priceSelect" class="select-input">
+                    <option value="all">全部价格</option>
+                    <option value="0-200">0-200元</option>
+                    <option value="200-500">200-500元</option>
+                    <option value="500-1000">500-1000元</option>
+                    <option value="1000+">1000元以上</option>
+                </select>
+                <select id="sortSelect" class="select-input">
+                    <option value="popularity">按人气排序</option>
+                    <option value="rating">按评分排序</option>
+                    <option value="price-asc">价格从低到高</option>
+                    <option value="price-desc">价格从高到低</option>
+                </select>
+            </div>
+
+            <!-- Gift Grid -->
+            <div id="giftGrid" class="gift-grid"></div>
+        </section>
+
+        <!-- Lists Section -->
+        <section id="lists" class="section">
+            <div class="list-header">
+                <h2>生日礼物清单</h2>
+                <div class="list-controls">
+                    <div class="form-group">
+                        <label for="listSort">排序方式:</label>
+                        <select id="listSort" class="form-control">
+                            <option value="date">按日期排序</option>
+                            <option value="title">按标题排序</option>
+                            <option value="items">按礼物数量排序</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="listFilter">筛选方式:</label>
+                        <select id="listFilter" class="form-control">
+                            <option value="all">全部清单</option>
+                            <option value="completed">已完成礼物清单</option>
+                            <option value="incomplete">未完成礼物清单</option>
+                            <option value="mixed">混合状态清单</option>
+                        </select>
+                    </div>
+                    <button id="createListBtn" class="btn btn-primary">创建新清单</button>
+                </div>
+            </div>
+            <div id="listsContainer" class="lists-container"></div>
+        </section>
+
+        <!-- Card Maker Section -->
+        <section id="card" class="section">
+            <div class="card-maker">
+                <div class="editor-controls">
+                    <h3>贺卡制作</h3>
+                    <div class="form-group">
+                        <label for="cardTitle">贺卡标题</label>
+                        <input type="text" id="cardTitle" class="card-input" placeholder="输入标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="cardMessage">祝福语</label>
+                        <textarea id="cardMessage" class="card-textarea" placeholder="写下您的祝福..."></textarea>
+                    </div>
+                    <div class="form-group">
+                <label for="textColor">文字颜色</label>
+                <input type="color" id="textColor" class="color-input" value="#ffffff">
+            </div>
+            <div class="form-group">
+                <label for="fontFamily">字体</label>
+                <select id="fontFamily" class="select-input">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Courier New">Courier New</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fontSize">字号</label>
+                <select id="fontSize" class="select-input">
+                    <option value="14px">14px</option>
+                    <option value="16px" selected>16px</option>
+                    <option value="18px">18px</option>
+                    <option value="20px">20px</option>
+                    <option value="24px">24px</option>
+                    <option value="30px">30px</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <div class="font-style-controls">
+                    <label><input type="checkbox" id="fontBold"> 粗体</label>
+                    <label><input type="checkbox" id="fontItalic"> 斜体</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cardBgImage">选择背景图片</label>
+                <input type="file" id="cardBgImage" class="file-input" accept="image/*">
+            </div>
+                    <div class="form-group">
+                        <label for="cardImage">上传配图</label>
+                        <input type="file" id="cardImage" class="file-input" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>贴纸</label>
+                        <button id="openStickerPanel" class="btn btn-outline">选择贴纸</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardTemplate">选择模板</label>
+                        <select id="cardTemplate" class="select-input">
+                            <option value="template1">模板1</option>
+                            <option value="template2">模板2</option>
+                            <option value="template3">模板3</option>
+                            <option value="template4">模板4</option>
+                            <option value="template5">模板5</option>
+                        </select>
+                    </div>
+                    <div class="editor-buttons">
+                        <button id="saveCardBtn" class="btn btn-primary">保存贺卡</button>
+                        <button id="shareCardBtn" class="btn btn-outline">分享贺卡</button>
+                    </div>
+                </div>
+                <div class="card-preview">
+                    <h3>预览效果</h3>
+                    <div id="cardPreview" class="card-preview-area template1">
+                        <h2 class="preview-title">贺卡标题</h2>
+                        <p class="preview-message">写下你的祝福...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Sticker Panel -->
+    <div id="stickerPanel" class="modal">
+        <div class="modal-content sticker-panel-content">
+            <div class="sticker-panel-header">
+                <h3>选择贴纸</h3>
+                <span class="close sticker-panel-close">&times;</span>
+            </div>
+            <div class="sticker-categories">
+                <button class="sticker-category-btn active" data-category="all">全部</button>
+                <button class="sticker-category-btn" data-category="birthday">生日</button>
+                <button class="sticker-category-btn" data-category="newyear">元旦</button>
+                <button class="sticker-category-btn" data-category="christmas">圣诞</button>
+                <button class="sticker-category-btn" data-category="emoji">表情</button>
+            </div>
+            <div class="sticker-list" id="stickerList">
+                <!-- 贴纸将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 礼物推荐与生日清单系统. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
