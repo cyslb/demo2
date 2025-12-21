@@ -610,6 +610,10 @@ async function loadSampleData(forceReload = false) {
     
     // 如果forceReload为true，或者localStorage中没有数据，则重新加载
     if (forceReload || !hasLocalData) {
+        // 强制清除localStorage中的旧数据
+        localStorage.removeItem('giftData');
+        console.log('已清除localStorage中的旧数据');
+        
         console.log('从外部JSON文件加载礼物数据...');
         
         // 调用loadGiftsFromJSON函数从外部文件读取数据
@@ -1256,9 +1260,23 @@ function renderGifts(filteredGifts = giftData) {
     console.log('开始渲染礼物卡片，共', sortedGifts.length, '个礼物');
     console.log('排序后的礼物示例:', sortedGifts.slice(0, 2));
     
-    // 限制初始页面显示的礼物数量为9个（优化排版）
-    const limitedGifts = sortedGifts.slice(0, 9);
-    console.log('限制后显示的礼物数量:', limitedGifts.length, '个礼物');
+    // 限制初始页面显示的礼物数量为9个，且不要放同类的商品（优化排版和多样性）
+    const usedCategories = new Set();
+    const limitedGifts = [];
+    
+    for (const gift of sortedGifts) {
+        if (!usedCategories.has(gift.category) && limitedGifts.length < 9) {
+            limitedGifts.push(gift);
+            usedCategories.add(gift.category);
+        }
+        if (limitedGifts.length >= 9) {
+            break;
+        }
+    }
+    
+    console.log('去重后显示的礼物数量:', limitedGifts.length, '个礼物');
+    console.log('使用的类别:', Array.from(usedCategories));
+    console.log('去重后的礼物:', limitedGifts.map(g => ({name: g.name, category: g.category})));
     
     limitedGifts.forEach((gift, index) => {
         console.log(`渲染第${index + 1}个礼物:`, gift.name);
