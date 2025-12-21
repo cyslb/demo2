@@ -1,0 +1,30 @@
+# 临时文件
+*.tmp
+*.temp
+
+# 日志文件
+*.log
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# Python相关文件
+__pycache__/
+*.pyc
+*.pyo
+
+# 备份文件
+*.bak
+*.backup
+
+# IDE文件
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
