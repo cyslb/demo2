@@ -261,8 +261,7 @@ async function loadGiftsFromJSON() {
         
         // 将抖音JSON数据转换为应用程序所需的格式
             const gifts = Array.isArray(data) ? (() => {
-                const uniqueGifts = [];
-                const seenCategories = new Set();
+                const giftList = [];
                 
                 data.forEach((item, index) => {
                     // 提取字段并转换
@@ -270,14 +269,6 @@ async function loadGiftsFromJSON() {
                     const priceStr = item['商品价格'] || '0';
                     const chineseCategory = item['商品类别'] || '';
                     const itemType = item['商品类目'] || '';
-                    
-                    // 如果该类别已经添加过，跳过
-                    if (seenCategories.has(chineseCategory)) {
-                        return;
-                    }
-                    
-                    // 标记该类别为已添加
-                    seenCategories.add(chineseCategory);
                     
                     // 解析价格
                     const price = parseFloat(priceStr);
@@ -332,8 +323,8 @@ async function loadGiftsFromJSON() {
                     }
                     const description = itemType || '暂无描述';
                     
-                    uniqueGifts.push({
-                        id: uniqueGifts.length + 1, // 重新生成ID，确保连续
+                    giftList.push({
+                        id: giftList.length + 1, // 重新生成ID，确保连续
                         name: name,
                         price: price,
                         category: category,
@@ -344,7 +335,7 @@ async function loadGiftsFromJSON() {
                     });
                 });
                 
-                return uniqueGifts;
+                return giftList;
             })() : [];
         
         console.log('JSON数据转换完成，共', gifts.length, '个礼物');
