@@ -1151,12 +1151,52 @@ function renderGifts(filteredGifts = giftData) {
         return;
     }
     
+    // 优化：将加载快的礼物（有WebP格式）优先显示在前面
+    const sortedGifts = [...filteredGifts].sort((a, b) => {
+        // 为每个礼物生成图片路径，与renderGifts函数中使用的逻辑一致
+        let imageA = a.image || `https://via.placeholder.com/300x200?text=No+Image`;
+        let imageB = b.image || `https://via.placeholder.com/300x200?text=No+Image`;
+        
+        // 检查是否支持WebP并生成对应的图片路径
+        if (webpSupported && imageA !== `https://via.placeholder.com/300x200?text=No+Image` && imageA.endsWith('.jpg')) {
+            imageA = imageA.replace('.jpg', '.webp').replace('images/', 'images/webp/');
+        }
+        
+        if (webpSupported && imageB !== `https://via.placeholder.com/300x200?text=No+Image` && imageB.endsWith('.jpg')) {
+            imageB = imageB.replace('.jpg', '.webp').replace('images/', 'images/webp/');
+        }
+        
+        // 优先显示有WebP格式的礼物
+        const hasWebPA = imageA.endsWith('.webp');
+        const hasWebPB = imageB.endsWith('.webp');
+        
+        if (hasWebPA && !hasWebPB) {
+            return -1;
+        } else if (!hasWebPA && hasWebPB) {
+            return 1;
+        }
+        
+        // 如果都有WebP或都没有，使用占位符的礼物排在后面
+        const isPlaceholderA = imageA.includes('placeholder');
+        const isPlaceholderB = imageB.includes('placeholder');
+        
+        if (!isPlaceholderA && isPlaceholderB) {
+            return -1;
+        } else if (isPlaceholderA && !isPlaceholderB) {
+            return 1;
+        }
+        
+        // 如果都一样，保持原顺序
+        return 0;
+    });
+    
     // 使用文档碎片减少DOM操作次数，提升性能
     const fragment = document.createDocumentFragment();
     
-    console.log('开始渲染礼物卡片，共', filteredGifts.length, '个礼物');
+    console.log('开始渲染礼物卡片，共', sortedGifts.length, '个礼物');
+    console.log('排序后的礼物示例:', sortedGifts.slice(0, 2));
     
-    filteredGifts.forEach((gift, index) => {
+    sortedGifts.forEach((gift, index) => {
         console.log(`渲染第${index + 1}个礼物:`, gift.name);
         
         // 验证礼物数据完整性
