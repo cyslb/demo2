@@ -239,7 +239,7 @@ async function loadGiftsFromJSON() {
                     // 尝试根据商品类别自动使用真实图片
                     // 书籍相关的不需要导入图片
                     const bookCategories = ['历史', '哲学', '宗教', '小说', '散文', '科幻', '科普', '经济', '诗歌', '话剧'];
-                    let image = bookCategories.includes(chineseCategory) ? '' : `images/${encodeURIComponent(chineseCategory)}.jpg`;
+                    let image = bookCategories.includes(chineseCategory) ? '' : `images/${chineseCategory}.jpg`;
                     
                     // 如果没有找到直接映射，尝试根据商品名称或描述判断类别
                     if (!category) {
