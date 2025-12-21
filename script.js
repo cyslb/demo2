@@ -1142,7 +1142,7 @@ function renderGifts(filteredGifts = giftData) {
         giftCard.innerHTML = `
             <div class="gift-image">
                 <span class="category-badge">${getCategoryName(category)}</span>
-                <img src="${image}" alt="${name}">
+                <img src="${image}" alt="${name}" loading="lazy">
             </div>
             <div class="gift-info">
                 <h3 class="gift-name">${name}</h3>
