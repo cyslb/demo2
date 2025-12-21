@@ -2,7 +2,7 @@ import http.server
 import socketserver
 import time
 
-PORT = 8087
+PORT = 8089
 
 # 自定义请求处理器，添加图片缓存策略
 class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):

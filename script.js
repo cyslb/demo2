@@ -1151,7 +1151,63 @@ function renderGifts(filteredGifts = giftData) {
         return;
     }
     
-    // 优化：将加载快的礼物（有WebP格式）优先显示在前面
+    // 优化：将加载快的礼物（有WebP格式且文件小的）优先显示在前面
+    // 图片大小映射表（字节）- 基于实际文件大小排序
+    const imageSizes = {
+        '破壁机.webp': 10848,
+        '手机.webp': 11888,
+        '美发电器.webp': 11558,
+        '平板电脑.webp': 16188,
+        '户外服装.webp': 17230,
+        '腕表.webp': 17886,
+        '短外套.webp': 19496,
+        '瑜伽垫.webp': 20858,
+        '餐桌.webp': 20468,
+        '拉力器.webp': 21616,
+        '羽绒服.webp': 21792,
+        '数码相机.webp': 22332,
+        '智能手表.webp': 23862,
+        '袜子.webp': 24750,
+        '运动羽绒服.webp': 25032,
+        '羊毛衫.webp': 25874,
+        '耳机.webp': 29590,
+        '瑜伽裤.webp': 30900,
+        '抽油烟机.webp': 30464,
+        '扫地机器人.webp': 30808,
+        '眉笔.webp': 28520,
+        '设计师潮牌.webp': 28078,
+        '手部护理.webp': 34354,
+        '防护用品.webp': 33180,
+        '面部美容仪器.webp': 33474,
+        '无人机.webp': 35518,
+        '洗碗机.webp': 35558,
+        '面膜.webp': 34810,
+        '面部彩妆.webp': 36204,
+        '蔬菜.webp': 38428,
+        '床架.webp': 41428,
+        '棉衣.webp': 44594,
+        '洗地机.webp': 44220,
+        '游戏本.webp': 46562,
+        '洗发护发.webp': 47160,
+        '跑步机.webp': 14848,
+        '笔记本电脑.webp': 14860,
+        '毛针织衫.webp': 15138,
+        '跑步鞋.webp': 47846,
+        '游戏机.webp': 48110,
+        '跳绳.webp': 56698,
+        '篮球鞋.webp': 56692,
+        '插排.webp': 60798,
+        '沙发.webp': 60982,
+        '篮球.webp': 67616,
+        '茶几.webp': 67784,
+        '靴子.webp': 68778,
+        '随身wifi.webp': 53748,
+        '散粉.webp': 32794,
+        '运动背心.webp': 29836,
+        '运动鞋.webp': 16462,
+        '运动Tshirt.webp': 11460
+    };
+    
     const sortedGifts = [...filteredGifts].sort((a, b) => {
         // 为每个礼物生成图片路径，与renderGifts函数中使用的逻辑一致
         let imageA = a.image || `https://via.placeholder.com/300x200?text=No+Image`;
@@ -1176,6 +1232,19 @@ function renderGifts(filteredGifts = giftData) {
             return 1;
         }
         
+        // 如果都有WebP，按文件大小排序（小文件优先）
+        if (hasWebPA && hasWebPB) {
+            const fileNameA = imageA.split('/').pop();
+            const fileNameB = imageB.split('/').pop();
+            
+            const sizeA = imageSizes[fileNameA] || Infinity;
+            const sizeB = imageSizes[fileNameB] || Infinity;
+            
+            // 小文件优先
+            if (sizeA < sizeB) return -1;
+            if (sizeA > sizeB) return 1;
+        }
+        
         // 如果都有WebP或都没有，使用占位符的礼物排在后面
         const isPlaceholderA = imageA.includes('placeholder');
         const isPlaceholderB = imageB.includes('placeholder');
@@ -1196,8 +1265,8 @@ function renderGifts(filteredGifts = giftData) {
     console.log('开始渲染礼物卡片，共', sortedGifts.length, '个礼物');
     console.log('排序后的礼物示例:', sortedGifts.slice(0, 2));
     
-    // 限制初始页面显示的礼物数量为12个
-    const limitedGifts = sortedGifts.slice(0, 12);
+    // 限制初始页面显示的礼物数量为4个（进一步减少以提升加载速度）
+    const limitedGifts = sortedGifts.slice(0, 4);
     console.log('限制后显示的礼物数量:', limitedGifts.length, '个礼物');
     
     limitedGifts.forEach((gift, index) => {
@@ -1242,7 +1311,7 @@ function renderGifts(filteredGifts = giftData) {
                 <span class="category-badge">${getCategoryName(category)}</span>
                 <div class="image-container">
                     <div class="image-placeholder"></div>
-                    <img src="${image}" alt="${name}" loading="lazy" class="gift-img">
+                    <img src="${image}" alt="${name}" class="gift-img">
                 </div>
             </div>
             <div class="gift-info">
