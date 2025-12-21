@@ -1265,8 +1265,8 @@ function renderGifts(filteredGifts = giftData) {
     console.log('开始渲染礼物卡片，共', sortedGifts.length, '个礼物');
     console.log('排序后的礼物示例:', sortedGifts.slice(0, 2));
     
-    // 限制初始页面显示的礼物数量为4个（进一步减少以提升加载速度）
-    const limitedGifts = sortedGifts.slice(0, 4);
+    // 限制初始页面显示的礼物数量为6个（优化排版）
+    const limitedGifts = sortedGifts.slice(0, 6);
     console.log('限制后显示的礼物数量:', limitedGifts.length, '个礼物');
     
     limitedGifts.forEach((gift, index) => {
