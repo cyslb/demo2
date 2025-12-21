@@ -495,7 +495,7 @@ html {
     animation: heartBeat 0.6s ease;
 }
 
-.action-btn .in-wishlist {
+.action-btn.in-wishlist {
     color: #ff6b6b;
     animation: heartBeat 0.6s ease;
 }

@@ -1153,8 +1153,8 @@ function renderGifts(filteredGifts = giftData) {
                         <i class="fas fa-link"></i>
                         ${gift.references}
                     </button>
-                    <button class="action-btn wishlist-btn" data-id="${gift.id}">
-                        <i class="fas fa-bookmark ${isInWishlist(gift.id) ? 'in-wishlist' : ''}"></i>
+                    <button class="action-btn wishlist-btn ${isInWishlist(gift.id) ? 'in-wishlist' : ''}" data-id="${gift.id}">
+                        <i class="fas fa-bookmark"></i>
                         ${getWishlistCount(gift.id)}
                     </button>
                 </div>
@@ -1286,11 +1286,9 @@ function addGiftToWishlist(giftId) {
     // 保存到localStorage
     localStorage.setItem('userLists', JSON.stringify(userLists));
     
-    // 更新用户清单界面
+    // 更新用户清单界面和礼物列表
     renderUserLists();
-    
-    // 重新渲染礼物列表，更新收藏图标状态
-    renderGiftCards(giftData);
+    renderGifts();
 }
 
 // 筛选和排序礼物
