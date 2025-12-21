@@ -53,6 +53,20 @@ const listTemplates = {
     }
 };
 
+// 检查浏览器是否支持WebP格式
+function isWebPSupported() {
+    // 创建一个canvas元素并尝试绘制WebP格式的图片
+    const canvas = document.createElement('canvas');
+    if (!canvas.getContext) return false;
+    
+    // 尝试将canvas转换为WebP格式的blob
+    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+}
+
+// 全局变量：浏览器是否支持WebP
+const webpSupported = isWebPSupported();
+console.log('WebP支持情况:', webpSupported);
+
 // DOM元素
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('.section');
@@ -86,6 +100,41 @@ const stickerPanel = document.getElementById('stickerPanel');
 const stickerPanelClose = document.querySelector('.sticker-panel-close');
 const stickerCategoryBtns = document.querySelectorAll('.sticker-category-btn');
 const stickerList = document.getElementById('stickerList');
+
+// 图片加载优化：创建图片预加载器
+class ImagePreloader {
+    constructor() {
+        this.cache = new Map();
+    }
+    
+    // 预加载单个图片
+    preloadImage(url) {
+        if (this.cache.has(url)) {
+            return this.cache.get(url);
+        }
+        
+        const promise = new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                this.cache.set(url, img);
+                resolve(img);
+            };
+            img.onerror = reject;
+            img.src = url;
+        });
+        
+        this.cache.set(url, promise);
+        return promise;
+    }
+    
+    // 批量预加载图片
+    preloadImages(urls) {
+        return Promise.all(urls.map(url => this.preloadImage(url)));
+    }
+}
+
+// 创建图片预加载器实例
+const imagePreloader = new ImagePreloader();
 
 
 // 初始化应用
@@ -1126,7 +1175,12 @@ function renderGifts(filteredGifts = giftData) {
         const description = gift.description || '暂无描述';
         const likes = gift.likes || 0;
         const references = gift.references || 0;
-        const image = gift.image || `https://via.placeholder.com/300x200?text=No+Image`;
+        let image = gift.image || `https://via.placeholder.com/300x200?text=No+Image`;
+        
+        // 如果浏览器支持WebP格式，并且图片路径不是占位符，则使用WebP格式
+        if (webpSupported && image !== `https://via.placeholder.com/300x200?text=No+Image` && image.endsWith('.jpg')) {
+            image = image.replace('.jpg', '.webp').replace('images/', 'images/webp/');
+        }
         
         // 根据礼物类别选择图标
         const categoryIcons = {
@@ -1142,7 +1196,10 @@ function renderGifts(filteredGifts = giftData) {
         giftCard.innerHTML = `
             <div class="gift-image">
                 <span class="category-badge">${getCategoryName(category)}</span>
-                <img src="${image}" alt="${name}" loading="lazy">
+                <div class="image-container">
+                    <div class="image-placeholder"></div>
+                    <img src="${image}" alt="${name}" loading="lazy" class="gift-img">
+                </div>
             </div>
             <div class="gift-info">
                 <h3 class="gift-name">${name}</h3>
@@ -1160,6 +1217,29 @@ function renderGifts(filteredGifts = giftData) {
                 </div>
             </div>
         `;
+        
+        // 为图片添加加载完成后的淡入效果
+        const imgElement = giftCard.querySelector('.gift-img');
+        imgElement.addEventListener('load', () => {
+            // 图片加载完成后，显示图片并隐藏占位符
+            imgElement.style.opacity = '1';
+            const placeholder = giftCard.querySelector('.image-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+        });
+        
+        // 图片加载失败时的处理
+        imgElement.addEventListener('error', () => {
+            // 如果图片加载失败，显示占位符文字
+            imgElement.style.opacity = '1';
+            imgElement.src = `https://via.placeholder.com/300x200?text=No+Image`;
+            const placeholder = giftCard.querySelector('.image-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+        });
+        
         fragment.appendChild(giftCard);
     });
     
