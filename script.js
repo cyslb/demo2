@@ -1237,7 +1237,7 @@ function getWishlistCount(giftId) {
     return count;
 }
 
-// 将礼物加入心愿清单
+// 将礼物加入/移除心愿清单（切换功能）
 function addGiftToWishlist(giftId) {
     // 查找礼物
     const gift = giftData.find(g => g.id === giftId);
@@ -1265,30 +1265,32 @@ function addGiftToWishlist(giftId) {
     
     // 检查礼物是否已经在清单中
     const isAlreadyInList = wishlist.items.some(item => item.id === gift.id);
+    
     if (isAlreadyInList) {
-        alert('该礼物已经在您的心愿清单中了！');
-        return;
+        // 如果已经在清单中，则移除
+        wishlist.items = wishlist.items.filter(item => item.id !== gift.id);
+        alert('礼物已从心愿清单中移除！');
+    } else {
+        // 如果不在清单中，则添加
+        const newItem = {
+            id: gift.id,
+            name: gift.name,
+            price: gift.price,
+            description: gift.description,
+            claimed: false
+        };
+        wishlist.items.push(newItem);
+        alert('礼物已成功添加到心愿清单！');
     }
-    
-    // 将礼物添加到清单中
-    const newItem = {
-        id: gift.id,
-        name: gift.name,
-        price: gift.price,
-        description: gift.description,
-        claimed: false
-    };
-    
-    wishlist.items.push(newItem);
     
     // 保存到localStorage
     localStorage.setItem('userLists', JSON.stringify(userLists));
     
-    // 显示成功消息
-    alert('礼物已成功添加到心愿清单！');
-    
-    // 更新界面
+    // 更新用户清单界面
     renderUserLists();
+    
+    // 重新渲染礼物列表，更新收藏图标状态
+    renderGiftCards(giftData);
 }
 
 // 筛选和排序礼物
