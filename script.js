@@ -636,17 +636,180 @@ async function loadSampleData(forceReload = false) {
             gift.description = gift.description || '暂无描述';
         });
         
-        // 保存到localStorage
-        localStorage.setItem('giftData', JSON.stringify(newGiftData));
-        giftData = newGiftData;
+        // 扩展礼物数据，为每个类别生成更多同类礼物
+        const expandedGiftData = expandGiftData(newGiftData);
         
-        console.log('数据加载成功，共加载了', newGiftData.length, '个礼物');
-        console.log('礼物数据示例:', newGiftData.slice(0, 2));
+        // 保存到localStorage
+        localStorage.setItem('giftData', JSON.stringify(expandedGiftData));
+        giftData = expandedGiftData;
+        
+        console.log('数据加载成功，共加载了', expandedGiftData.length, '个礼物');
+        console.log('礼物数据示例:', expandedGiftData.slice(0, 2));
     } else {
         giftData = JSON.parse(localStorage.getItem('giftData'));
         console.log('从localStorage加载数据，共', giftData.length, '个礼物');
         console.log('localStorage中的礼物数据示例:', giftData.slice(0, 2));
     }
+}
+
+// 扩展礼物数据
+function expandGiftData(gifts) {
+    console.log('开始扩展礼物数据，原始数量:', gifts.length);
+    
+    // 定义各类别的扩展项
+    const categoryVariations = {
+        electronics: {
+            items: [
+                {name: '智能手表', description: '多功能智能设备', image: 'images/智能手表.jpg'},
+                {name: '无线耳机', description: '高品质音频体验', image: 'images/无线耳机.jpg'},
+                {name: '移动电源', description: '大容量快充移动电源', image: 'images/移动电源.jpg'},
+                {name: '蓝牙音箱', description: '便携式高音质蓝牙音箱', image: 'images/蓝牙音箱.jpg'},
+                {name: '智能手环', description: '健康监测智能手环', image: 'images/智能手环.jpg'},
+                {name: '平板电脑', description: '轻薄便携平板电脑', image: 'images/平板电脑.jpg'},
+                {name: '游戏手柄', description: '专业游戏手柄', image: 'images/游戏手柄.jpg'},
+                {name: '相机', description: '高清数码相机', image: 'images/相机.jpg'},
+                {name: '键盘', description: '机械键盘', image: 'images/键盘.jpg'},
+                {name: '鼠标', description: '无线鼠标', image: 'images/鼠标.jpg'}
+            ],
+            basePrice: 199
+        },
+        fashion: {
+            items: [
+                {name: '时尚手袋', description: '流行款式时尚手袋', image: 'images/时尚手袋.jpg'},
+                {name: '太阳镜', description: '潮流设计太阳镜', image: 'images/太阳镜.jpg'},
+                {name: '丝巾', description: '高品质真丝丝巾', image: 'images/丝巾.jpg'},
+                {name: '手表', description: '精致时尚手表', image: 'images/手表.jpg'},
+                {name: '皮带', description: '经典真皮皮带', image: 'images/皮带.jpg'},
+                {name: '围巾', description: '保暖时尚围巾', image: 'images/围巾.jpg'},
+                {name: '帽子', description: '潮流帽子', image: 'images/帽子.jpg'},
+                {name: '手套', description: '保暖手套', image: 'images/手套.jpg'},
+                {name: '项链', description: '精美项链', image: 'images/项链.jpg'},
+                {name: '耳环', description: '时尚耳环', image: 'images/耳环.jpg'}
+            ],
+            basePrice: 129
+        },
+        home: {
+            items: [
+                {name: '保温杯', description: '不锈钢真空保温杯', image: 'images/保温杯.jpg'},
+                {name: '台灯', description: '护眼LED台灯', image: 'images/台灯.jpg'},
+                {name: '抱枕', description: '舒适抱枕', image: 'images/抱枕.jpg'},
+                {name: '地毯', description: '时尚地毯', image: 'images/地毯.jpg'},
+                {name: '花瓶', description: '精美花瓶', image: 'images/花瓶.jpg'},
+                {name: '相框', description: '精致相框', image: 'images/相框.jpg'},
+                {name: '毛巾', description: '柔软毛巾', image: 'images/毛巾.jpg'},
+                {name: '杯子', description: '创意杯子', image: 'images/杯子.jpg'},
+                {name: '靠垫', description: '舒适靠垫', image: 'images/靠垫.jpg'},
+                {name: '收纳盒', description: '实用收纳盒', image: 'images/收纳盒.jpg'}
+            ],
+            basePrice: 89
+        },
+        books: {
+            items: [
+                {name: '小说合集', description: '畅销小说合集', image: 'images/小说合集.jpg'},
+                {name: '科普书籍', description: '有趣的科普书籍', image: 'images/科普书籍.jpg'},
+                {name: '历史书籍', description: '经典历史书籍', image: 'images/历史书籍.jpg'},
+                {name: '心理学书籍', description: '入门心理学书籍', image: 'images/心理学书籍.jpg'},
+                {name: '哲学书籍', description: '经典哲学书籍', image: 'images/哲学书籍.jpg'},
+                {name: '经济书籍', description: '经济学入门书籍', image: 'images/经济书籍.jpg'},
+                {name: '文学书籍', description: '经典文学书籍', image: 'images/文学书籍.jpg'},
+                {name: '艺术书籍', description: '艺术欣赏书籍', image: 'images/艺术书籍.jpg'},
+                {name: '技术书籍', description: '编程技术书籍', image: 'images/技术书籍.jpg'},
+                {name: '生活书籍', description: '生活技巧书籍', image: 'images/生活书籍.jpg'}
+            ],
+            basePrice: 49
+        },
+        beauty: {
+            items: [
+                {name: '面膜', description: '补水保湿面膜', image: 'images/面膜.jpg'},
+                {name: '口红', description: '持久保湿口红', image: 'images/口红.jpg'},
+                {name: '面霜', description: '滋润面霜', image: 'images/面霜.jpg'},
+                {name: '香水', description: '经典香水', image: 'images/香水.jpg'},
+                {name: '眼影', description: '多彩眼影盘', image: 'images/眼影.jpg'},
+                {name: '睫毛膏', description: '浓密睫毛膏', image: 'images/睫毛膏.jpg'},
+                {name: '粉底液', description: '轻薄粉底液', image: 'images/粉底液.jpg'},
+                {name: '腮红', description: '自然腮红', image: 'images/腮红.jpg'},
+                {name: '指甲油', description: '持久指甲油', image: 'images/指甲油.jpg'},
+                {name: '护手霜', description: '滋润护手霜', image: 'images/护手霜.jpg'}
+            ],
+            basePrice: 69
+        },
+        sports: {
+            items: [
+                {name: '瑜伽垫', description: '防滑瑜伽垫', image: 'images/瑜伽垫.jpg'},
+                {name: '哑铃', description: '健身哑铃', image: 'images/哑铃.jpg'},
+                {name: '跑步鞋', description: '轻便跑步鞋', image: 'images/跑步鞋.jpg'},
+                {name: '运动服', description: '舒适运动服', image: 'images/运动服.jpg'},
+                {name: '跳绳', description: '健身跳绳', image: 'images/跳绳.jpg'},
+                {name: '篮球', description: '标准篮球', image: 'images/篮球.jpg'},
+                {name: '足球', description: '标准足球', image: 'images/足球.jpg'},
+                {name: '羽毛球拍', description: '专业羽毛球拍', image: 'images/羽毛球拍.jpg'},
+                {name: '乒乓球拍', description: '专业乒乓球拍', image: 'images/乒乓球拍.jpg'},
+                {name: '运动水杯', description: '大容量运动水杯', image: 'images/运动水杯.jpg'}
+            ],
+            basePrice: 119
+        }
+    };
+    
+    // 创建一个集合来存储现有的礼物名称，避免重复
+    const existingGiftNames = new Set(gifts.map(gift => gift.name));
+    
+    // 创建一个集合来存储现有的图片路径
+    const existingImages = new Set(gifts.map(gift => gift.image).filter(image => image && image !== ''));
+    
+    // 扩展后的礼物列表
+    const expandedGifts = [...gifts];
+    let newId = gifts.length + 1;
+    
+    // 为每个类别添加更多礼物
+    for (const category of Object.keys(categoryVariations)) {
+        console.log(`扩展类别: ${category}`);
+        
+        // 获取该类别的基础价格
+        const basePrice = categoryVariations[category].basePrice;
+        
+        // 获取该类别的扩展项
+        const variations = categoryVariations[category].items;
+        
+        // 为该类别添加扩展项
+        for (const variation of variations) {
+            // 检查是否已经存在相同名称的礼物
+            if (!existingGiftNames.has(variation.name)) {
+                // 生成随机价格（在基础价格的0.8-1.5倍之间）
+                const price = parseFloat((basePrice * (0.8 + Math.random() * 0.7)).toFixed(2));
+                
+                // 创建新礼物
+                const newGift = {
+                    id: newId++,
+                    name: variation.name,
+                    price: price,
+                    category: category,
+                    likes: Math.floor(Math.random() * 300) + 50,
+                    references: Math.floor(Math.random() * 100) + 10,
+                    description: variation.description,
+                    image: variation.image
+                };
+                
+                // 添加到扩展列表
+                expandedGifts.push(newGift);
+                
+                // 更新现有礼物名称集合
+                existingGiftNames.add(variation.name);
+            }
+        }
+    }
+    
+    // 找出需要补充的图片
+    const requiredImages = expandedGifts
+        .map(gift => gift.image)
+        .filter(image => image && image !== '' && !existingImages.has(image));
+    
+    // 输出需要补充的图片清单
+    console.log('=== 需要补充的图片清单 ===');
+    requiredImages.forEach(image => console.log(image));
+    console.log('=======================');
+    
+    console.log('礼物数据扩展完成，扩展后数量:', expandedGifts.length);
+    return expandedGifts;
 }
 
 // 加载用户数据
@@ -945,20 +1108,25 @@ function getGiftRecommendations(userAnswers) {
     // 解析年龄范围
     const [minAge, maxAge] = parseAgeRange(userAnswers.recipientAge);
     
-    // 为每个礼物计算匹配度得分
-    const giftsWithScores = giftData.map(gift => {
-        const score = calculateGiftScore(gift, userAnswers, minBudget, maxBudget, minAge, maxAge);
-        return { ...gift, matchScore: score };
-    });
+    // 为每个礼物计算匹配度得分，并过滤掉价格不在预算区间内的礼物
+    const giftsWithScores = giftData
+        .filter(gift => gift.price >= minBudget && gift.price <= maxBudget)
+        .map(gift => {
+            const score = calculateGiftScore(gift, userAnswers, minBudget, maxBudget, minAge, maxAge);
+            return { ...gift, matchScore: score };
+        });
     
-    // 按匹配度得分排序，取前12个
+    // 按匹配度得分排序
     return giftsWithScores
-        .sort((a, b) => b.matchScore - a.matchScore)
-        .slice(0, 12);
+        .sort((a, b) => b.matchScore - a.matchScore);
 }
 
 // 解析预算范围
 function parseBudgetRange(budgetStr) {
+    // 如果预算字符串为空，返回一个不可能的范围
+    if (!budgetStr || budgetStr === '') {
+        return [Infinity, 0]; // 这样任何礼物都不会被匹配
+    }
     if (budgetStr === '0-100') return [0, 100];
     if (budgetStr === '101-300') return [101, 300];
     if (budgetStr === '301-500') return [301, 500];
@@ -983,16 +1151,9 @@ function calculateGiftScore(gift, userAnswers, minBudget, maxBudget, minAge, max
     let score = 0;
     
     // 预算匹配度（30分）
+    // 由于已经在getGiftRecommendations函数中过滤了预算范围外的礼物，这里直接给满分
     if (gift.price >= minBudget && gift.price <= maxBudget) {
         score += 30;
-    } else if (gift.price < minBudget) {
-        // 价格低于预算下限，按差距扣分
-        const diff = (minBudget - gift.price) / minBudget;
-        score += Math.max(0, 30 - diff * 30);
-    } else {
-        // 价格高于预算上限，按差距扣分
-        const diff = (gift.price - maxBudget) / maxBudget;
-        score += Math.max(0, 30 - diff * 30);
     }
     
     // 类别匹配度（20分）
@@ -1203,7 +1364,8 @@ function renderGifts(filteredGifts = giftData) {
         '运动Tshirt.webp': 11460
     };
     
-    const sortedGifts = [...filteredGifts].sort((a, b) => {
+    // 首先按图片加载优化排序
+    const optimizedGifts = [...filteredGifts].sort((a, b) => {
         // 为每个礼物生成图片路径，与renderGifts函数中使用的逻辑一致
         let imageA = a.image || `https://via.placeholder.com/300x200?text=No+Image`;
         let imageB = b.image || `https://via.placeholder.com/300x200?text=No+Image`;
@@ -1254,31 +1416,57 @@ function renderGifts(filteredGifts = giftData) {
         return 0;
     });
     
+    // 然后应用类别交错排序
+    const sortedGifts = [];
+    
+    // 按类别分组
+    const giftsByCategory = {};
+    optimizedGifts.forEach(gift => {
+        if (!giftsByCategory[gift.category]) {
+            giftsByCategory[gift.category] = [];
+        }
+        giftsByCategory[gift.category].push(gift);
+    });
+    
+    // 交替添加不同类别的礼物
+    const categories = Object.keys(giftsByCategory);
+    let categoryIndex = 0;
+    let addedGifts = 0;
+    const totalGifts = optimizedGifts.length;
+    
+    // 记录每个类别的当前索引
+    const categoryCurrentIndices = {};
+    categories.forEach(category => {
+        categoryCurrentIndices[category] = 0;
+    });
+    
+    // 循环直到所有礼物都被添加
+    while (addedGifts < totalGifts) {
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[(categoryIndex + i) % categories.length];
+            const categoryGifts = giftsByCategory[category];
+            
+            if (categoryCurrentIndices[category] < categoryGifts.length) {
+                sortedGifts.push(categoryGifts[categoryCurrentIndices[category]]);
+                categoryCurrentIndices[category]++;
+                addedGifts++;
+                
+                // 确保每次只添加一个礼物后切换类别
+                categoryIndex = (categoryIndex + 1) % categories.length;
+                break;
+            }
+        }
+    }
+    
     // 使用文档碎片减少DOM操作次数，提升性能
     const fragment = document.createDocumentFragment();
     
     console.log('开始渲染礼物卡片，共', sortedGifts.length, '个礼物');
     console.log('排序后的礼物示例:', sortedGifts.slice(0, 2));
     
-    // 限制初始页面显示的礼物数量为9个，且不要放同类的商品（优化排版和多样性）
-    const usedCategories = new Set();
-    const limitedGifts = [];
+    console.log('总礼物数量:', sortedGifts.length, '个礼物');
     
-    for (const gift of sortedGifts) {
-        if (!usedCategories.has(gift.category) && limitedGifts.length < 9) {
-            limitedGifts.push(gift);
-            usedCategories.add(gift.category);
-        }
-        if (limitedGifts.length >= 9) {
-            break;
-        }
-    }
-    
-    console.log('去重后显示的礼物数量:', limitedGifts.length, '个礼物');
-    console.log('使用的类别:', Array.from(usedCategories));
-    console.log('去重后的礼物:', limitedGifts.map(g => ({name: g.name, category: g.category})));
-    
-    limitedGifts.forEach((gift, index) => {
+    sortedGifts.forEach((gift, index) => {
         console.log(`渲染第${index + 1}个礼物:`, gift.name);
         
         // 验证礼物数据完整性
@@ -1557,8 +1745,8 @@ function showPopularGifts() {
         return scoreB - scoreA;
     });
     
-    // 只显示前20个最热门的礼物
-    const top20Gifts = popularGifts.slice(0, 20);
+    // 显示所有热门礼物
+    const top20Gifts = popularGifts;
     
     // 更新筛选条件，确保界面显示正确
     searchInput.value = '';
@@ -1882,8 +2070,22 @@ function toggleItemClaimed(listId, itemId, isClaimed) {
 
 // 分享清单
 function shareList(listId) {
-    // 生成分享链接（简单模拟）
-    const shareUrl = `${window.location.origin}${window.location.pathname}?list=${listId}`;
+    // 找到要分享的清单
+    const list = userLists.find(l => l.id === listId);
+    if (!list) return;
+    
+    // 复制清单数据并移除敏感信息
+    const shareableList = {
+        title: list.title,
+        date: list.date,
+        description: list.description,
+        items: list.items,
+        createdAt: list.createdAt
+    };
+    
+    // 将清单数据编码到URL中
+    const encodedList = encodeURIComponent(JSON.stringify(shareableList));
+    const shareUrl = `${window.location.origin}${window.location.pathname}?sharedList=${encodedList}`;
     
     // 复制到剪贴板
     navigator.clipboard.writeText(shareUrl).then(() => {
@@ -2251,15 +2453,33 @@ function getCategoryName(category) {
 // 检查是否有分享链接
 function checkForSharedList() {
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // 检查是否有新的sharedList参数（直接包含清单数据）
+    const sharedListParam = urlParams.get('sharedList');
+    if (sharedListParam) {
+        try {
+            const sharedList = JSON.parse(decodeURIComponent(sharedListParam));
+            showSharedList(sharedList);
+            return;
+        } catch (error) {
+            console.error('解析分享清单失败:', error);
+        }
+    }
+    
+    // 兼容旧的list参数（仅包含ID）
     const listId = urlParams.get('list');
     if (listId) {
-        showSharedList(parseInt(listId));
+        const list = userLists.find(l => l.id === parseInt(listId));
+        if (list) {
+            showSharedList(list);
+        } else {
+            alert('该清单不存在或已被删除');
+        }
     }
 }
 
 // 显示分享的清单
-function showSharedList(listId) {
-    const list = userLists.find(l => l.id === listId);
+function showSharedList(list) {
     if (list) {
         // 创建分享视图
         const sharedView = `
@@ -2283,7 +2503,7 @@ function showSharedList(listId) {
                     `).join('')}
                 </div>
                 <div class="share-list-again">
-                    <button class="btn btn-primary share-again-btn" data-list-id="${listId}">分享给其他人</button>
+                    <button class="btn btn-primary share-again-btn">分享给其他人</button>
                 </div>
             </div>
         `;
@@ -2308,8 +2528,16 @@ function showSharedList(listId) {
         
         // 添加再次分享按钮事件
         document.querySelector('.share-again-btn').addEventListener('click', (e) => {
-            const listIdToShare = parseInt(e.target.dataset.listId);
-            shareList(listIdToShare);
+            // 为临时清单生成一个ID以便分享
+            const tempId = Date.now();
+            const tempList = {...list, id: tempId};
+            
+            // 临时添加到userLists以便分享
+            userLists.push(tempList);
+            shareList(tempId);
+            
+            // 分享完成后移除临时清单
+            userLists = userLists.filter(l => l.id !== tempId);
         });
     } else {
         alert('该清单不存在或已被删除');
@@ -2328,7 +2556,33 @@ function setupClaimButtons() {
 
 // 认领礼物
 function claimGift(itemId) {
-    // 查找包含该礼物的清单
+    // 检查是否是分享的清单
+    const shareSection = document.querySelector('.shared-list-view');
+    if (shareSection) {
+        // 如果是分享的清单，只更新UI，不修改localStorage
+        const claimBtn = document.querySelector(`[data-item-id="${itemId}"]`);
+        if (claimBtn && !claimBtn.disabled) {
+            claimBtn.disabled = true;
+            claimBtn.textContent = '已有人认领';
+            
+            // 添加认领标记
+            const item = claimBtn.closest('.shared-list-item');
+            if (item) {
+                const itemInfo = item.querySelector('.item-info');
+                if (!itemInfo.querySelector('.claimed-mark')) {
+                    const claimedMark = document.createElement('span');
+                    claimedMark.className = 'claimed-mark';
+                    claimedMark.textContent = '✓';
+                    itemInfo.insertBefore(claimedMark, itemInfo.firstChild);
+                }
+            }
+            
+            alert('礼物选择成功！');
+            return;
+        }
+    }
+    
+    // 查找包含该礼物的清单（非分享的情况）
     for (const list of userLists) {
         const item = list.items.find(i => i.id === itemId);
         if (item && !item.claimed) {
